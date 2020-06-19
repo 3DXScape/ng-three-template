@@ -7,7 +7,7 @@ export class EngineService implements OnDestroy {
   private renderer: THREE.WebGLRenderer;
   private camera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
-  private light: THREE.AmbientLight;
+  private light: THREE.DirectionalLight;
 
   private cube: THREE.Mesh;
 
@@ -42,12 +42,13 @@ export class EngineService implements OnDestroy {
     this.scene.add(this.camera);
 
     // soft white light
-    this.light = new THREE.AmbientLight( 0x404040 );
+    //this.light = new THREE.AmbientLight( 0x404040 );
+    this.light = new THREE.DirectionalLight( 0xffffff, 0.5 );
     this.light.position.z = 10;
     this.scene.add(this.light);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
     this.cube = new THREE.Mesh( geometry, material );
     this.scene.add(this.cube);
 
