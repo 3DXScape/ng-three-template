@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Injectable, ElementRef, OnDestroy, NgZone } from '@angular/core';
+import { Vector3 } from 'three';
 
 @Injectable({ providedIn: 'root' })
 export class EngineService implements OnDestroy {
@@ -8,6 +9,7 @@ export class EngineService implements OnDestroy {
   private camera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
   private light: THREE.DirectionalLight;
+  private alight: THREE.AmbientLight;
 
   private cube: THREE.Mesh;
 
@@ -42,15 +44,17 @@ export class EngineService implements OnDestroy {
     this.scene.add(this.camera);
 
     // soft white light
-    //this.light = new THREE.AmbientLight( 0x404040 );
+    this.alight = new THREE.AmbientLight( 0x404040 );
+    this.scene.add(this.alight);
     this.light = new THREE.DirectionalLight( 0xffffff, 0.5 );
     this.light.position.z = 10;
-    this.scene.add(this.light);
-
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+    
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const material = new THREE.MeshStandardMaterial({ wireframe: true });
     this.cube = new THREE.Mesh( geometry, material );
     this.scene.add(this.cube);
+    this.light.lookAt(this.cube.position);
+    this.scene.add(this.light);
 
   }
 
