@@ -11,7 +11,11 @@ export class EngineService implements OnDestroy {
   private light: THREE.DirectionalLight;
   private alight: THREE.AmbientLight;
 
-  private cube: THREE.Mesh;
+  private moon: THREE.Mesh;
+  private earth: THREE.Mesh;
+  private clock = new THREE.Clock();
+  private rate = 0.25; //relative operating rate for model
+
 
   private frameId: number = null;
 
@@ -40,21 +44,55 @@ export class EngineService implements OnDestroy {
     this.camera = new THREE.PerspectiveCamera(
       75, window.innerWidth / window.innerHeight, 0.1, 1000
     );
-    this.camera.position.z = 5;
+    this.camera.position.z = 6;
     this.scene.add(this.camera);
 
     // soft white light
     this.alight = new THREE.AmbientLight( 0x404040 );
-    this.scene.add(this.alight);
-    this.light = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    //this.scene.add(this.alight);
+    this.light = new THREE.DirectionalLight( 0xffffff, 1.0 );
     this.light.position.z = 10;
     
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshStandardMaterial({ wireframe: true });
-    this.cube = new THREE.Mesh( geometry, material );
-    this.scene.add(this.cube);
-    this.light.lookAt(this.cube.position);
+    //const geometry = new THREE.BoxGeometry(2, 2, 2);
+    //const material = new THREE.MeshStandardMaterial({ wireframe: true });
+    //this.cube = new THREE.Mesh( geometry, material );
+    //this.scene.add(this.cube);
+    var EARTH_RADIUS = 1;
+    var textureLoader = new THREE.TextureLoader();
+    var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 32, 32 );
+    var earthMaterial = new THREE.MeshPhongMaterial( {
+      specular: 0x333333,
+      shininess: 5,
+      //map: textureLoader.load( 'textures/planets/earth_atmos_2048.jpg' ),
+      map: textureLoader.load( '../assets/planets/8k_earth_daymap.jpg' ),
+      //map: textureLoader.load( 'textures/planets/ww15mgh.jpg' ),
+      specularMap: textureLoader.load( '../assets/planets/earth_specular_2048.jpg' ),
+      normalMap: textureLoader.load( '../assets/planets/earth_normal_2048.jpg' ),
+      normalScale: new THREE.Vector2( 0.85, 0.85 )
+    } );
+    this.earth = new THREE.Mesh( earthGeometry, earthMaterial );
+    //earth.rotation.x += 0.3;
+    //earth.rotation.z += 0.3;
+    //arrowX.rotation = earth.rotation;
+    //arrowY.rotation = earth.rotation;
+
+    //scene.add( geoid );
+    this.scene.add( this.earth );
+
+    var MOON_RADIUS = 0.27;
+    var moonGeometry = new THREE.SphereBufferGeometry( MOON_RADIUS, 16, 16 );
+    var moonMaterial = new THREE.MeshPhongMaterial( {
+      shininess: 5,
+      map: textureLoader.load( '../assets/planets/8k_moon.jpg' )
+    } );
+    this.moon = new THREE.Mesh( moonGeometry, moonMaterial );
+    this.scene.add( this.moon );
+
+    
+    
+    this.light.lookAt(this.earth.position);
     this.scene.add(this.light);
+
 
   }
 
@@ -80,9 +118,14 @@ export class EngineService implements OnDestroy {
     this.frameId = requestAnimationFrame(() => {
       this.render();
     });
+    this.earth.rotation.y += 0.10*this.rate;
+    var elapsed = this.clock.getElapsedTime() * 1.0 * this.rate;
+    this.moon.position.set( Math.sin( elapsed*0.2 ) * 5, 0, Math.cos( elapsed*0.2 ) * 5 );
+    this.moon.lookAt(this.earth.position);
+    this.moon.rotateY(-1.5);
 
-    this.cube.rotation.x += 0.01;
-    this.cube.rotation.y += 0.01;
+    //this.earth.rotation.x += 0.01;
+   // this.earth.rotation.y += 0.01;
     this.renderer.render(this.scene, this.camera);
   }
 
