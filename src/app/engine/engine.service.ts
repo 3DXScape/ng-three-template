@@ -30,13 +30,15 @@ export class EngineService implements OnDestroy {
   public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement;
+    //this.canvas.height = 32;
+    //this.canvas.width = 32;
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
 
     // create the scene
     this.scene = new THREE.Scene();
@@ -127,6 +129,7 @@ export class EngineService implements OnDestroy {
     //this.earth.rotation.x += 0.01;
    // this.earth.rotation.y += 0.01;
     this.renderer.render(this.scene, this.camera);
+    this.renderer.setSize(320, 200);
   }
 
   public resize(): void {
