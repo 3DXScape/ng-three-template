@@ -29,6 +29,7 @@ export class EngineService implements OnDestroy {
   private rate = 0.25; //relative operating rate for model
 
   private viewWidth = 280;
+  private viewHeight = 280;
 
 
 
@@ -52,29 +53,30 @@ export class EngineService implements OnDestroy {
     this.cCanvas = cCanvas.nativeElement;
     this.dCanvas = dCanvas.nativeElement;
     this.viewWidth = window.innerWidth/7;
-    this.canvas.height = this.viewWidth + 4;
+    this.viewHeight = window.innerHeight/3.5;
+    this.canvas.height = this.viewHeight + 4;
     this.canvas.width = this.viewWidth + 4;
     this.overviewCanvas.height = this.viewWidth + 4;
     this.overviewCanvas.width = this.viewWidth + 4;
-    this.aCanvas.height = this.viewWidth + 4;
+    this.aCanvas.height = this.viewHeight + 4;
     this.aCanvas.width = this.viewWidth + 4;
-    this.bCanvas.height = this.viewWidth + 4;
+    this.bCanvas.height = this.viewHeight + 4;
     this.bCanvas.width = this.viewWidth + 4;
-    this.cCanvas.height = this.viewWidth + 4;
+    this.cCanvas.height = this.viewHeight + 4;
     this.cCanvas.width = this.viewWidth + 4;
-    this.dCanvas.height = this.viewWidth + 4;
+    this.dCanvas.height = this.viewHeight + 4;
     this.dCanvas.width = this.viewWidth + 4;
     
     //var c = this.dCanvas;
     //var c = document.getElementById("dCanvas");
    var ctx = aCanvas.nativeElement.getContext("2d");
     ctx.beginPath();
-    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.rect(5, 5, this.viewWidth, this.viewHeight);
     ctx.fillStyle = '#202020';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = bCanvas.nativeElement.getContext("2d");
@@ -84,7 +86,7 @@ export class EngineService implements OnDestroy {
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = cCanvas.nativeElement.getContext("2d");
@@ -94,7 +96,7 @@ export class EngineService implements OnDestroy {
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = dCanvas.nativeElement.getContext("2d");
@@ -104,7 +106,7 @@ export class EngineService implements OnDestroy {
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
     ctx.stroke();
 
 
@@ -217,9 +219,9 @@ export class EngineService implements OnDestroy {
     //this.earth.rotation.x += 0.01;
    // this.earth.rotation.y += 0.01;
    this.renderer.render(this.scene, this.camera);
-   this.renderer.setSize( this.viewWidth + 4, this.viewWidth + 4);
+   this.renderer.setSize( this.viewWidth + 4, this.viewHeight + 4);
    this.overviewRenderer.render(this.scene, this.overviewCamera);
-   this.overviewRenderer.setSize( this.viewWidth + 4, this.viewWidth + 4);
+   this.overviewRenderer.setSize( this.viewWidth + 4, this.viewHeight + 4);
  }
 
   public resize(): void {
