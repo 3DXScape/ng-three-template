@@ -6,8 +6,20 @@ import { Vector3 } from 'three';
 export class EngineService implements OnDestroy {
   private canvas: HTMLCanvasElement;
   private renderer: THREE.WebGLRenderer;
+  private overviewCanvas: HTMLCanvasElement;
+  private overviewRenderer: THREE.WebGLRenderer;
+  private aCanvas: HTMLCanvasElement;
+  private aRenderer: THREE.WebGLRenderer;
+  private bCanvas: HTMLCanvasElement;
+  private bRenderer: THREE.WebGLRenderer;
+  private cCanvas: HTMLCanvasElement;
+  private cRenderer: THREE.WebGLRenderer;
+  private dCanvas: HTMLCanvasElement;
+  private dRenderer: THREE.WebGLRenderer;
   private camera: THREE.PerspectiveCamera;
+  private overviewCamera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
+  private overviewScene;
   private light: THREE.DirectionalLight;
   private alight: THREE.AmbientLight;
 
@@ -15,6 +27,9 @@ export class EngineService implements OnDestroy {
   private earth: THREE.Mesh;
   private clock = new THREE.Clock();
   private rate = 0.25; //relative operating rate for model
+
+  private viewWidth = 280;
+
 
 
   private frameId: number = null;
@@ -27,11 +42,71 @@ export class EngineService implements OnDestroy {
     }
   }
 
-  public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
+  public createScene(canvas: ElementRef<HTMLCanvasElement>, overviewCanvas: ElementRef<HTMLCanvasElement>,
+    aCanvas: ElementRef<HTMLCanvasElement>, bCanvas: ElementRef<HTMLCanvasElement>,cCanvas: ElementRef<HTMLCanvasElement>, dCanvas: ElementRef<HTMLCanvasElement>   ): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement;
-    //this.canvas.height = 32;
-    //this.canvas.width = 32;
+    this.overviewCanvas = overviewCanvas.nativeElement;
+    this.aCanvas = aCanvas.nativeElement;
+    this.bCanvas = bCanvas.nativeElement;
+    this.cCanvas = cCanvas.nativeElement;
+    this.dCanvas = dCanvas.nativeElement;
+    this.viewWidth = window.innerWidth/7;
+    this.canvas.height = this.viewWidth + 4;
+    this.canvas.width = this.viewWidth + 4;
+    this.overviewCanvas.height = this.viewWidth + 4;
+    this.overviewCanvas.width = this.viewWidth + 4;
+    this.aCanvas.height = this.viewWidth + 4;
+    this.aCanvas.width = this.viewWidth + 4;
+    this.bCanvas.height = this.viewWidth + 4;
+    this.bCanvas.width = this.viewWidth + 4;
+    this.cCanvas.height = this.viewWidth + 4;
+    this.cCanvas.width = this.viewWidth + 4;
+    this.dCanvas.height = this.viewWidth + 4;
+    this.dCanvas.width = this.viewWidth + 4;
+    
+    //var c = this.dCanvas;
+    //var c = document.getElementById("dCanvas");
+   var ctx = aCanvas.nativeElement.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.fillStyle = '#202020';
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath();
+    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx = bCanvas.nativeElement.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.fillStyle = '#808080';
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath();
+    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx = cCanvas.nativeElement.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.fillStyle = '#303030';
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath();
+    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx = dCanvas.nativeElement.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.fillStyle = '#404040';
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath();
+    ctx.arc(140, 140, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -40,14 +115,28 @@ export class EngineService implements OnDestroy {
     });
     this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
 
+    this.overviewRenderer = new THREE.WebGLRenderer({
+      canvas: this.overviewCanvas,
+      alpha: true,    // transparent background
+      antialias: true // smooth edges
+    });
+    this.overviewRenderer.setSize(window.innerWidth/2, window.innerHeight/2);
+
     // create the scene
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(
-      75, window.innerWidth / window.innerHeight, 0.1, 1000
-    );
-    this.camera.position.z = 6;
+      //75, window.innerWidth / window.innerHeight, 0.1, 1000
+      75, 1.00, 0.1, 1000
+      );
+    this.camera.position.z = 5.37;
     this.scene.add(this.camera);
+
+    this.overviewCamera = new THREE.PerspectiveCamera(
+      75, 1.0, 0.1, 1000
+    );
+    this.overviewCamera.position.y = 8.0;
+    this.scene.add(this.overviewCamera);
 
     // soft white light
     this.alight = new THREE.AmbientLight( 0x404040 );
@@ -90,12 +179,11 @@ export class EngineService implements OnDestroy {
     this.moon = new THREE.Mesh( moonGeometry, moonMaterial );
     this.scene.add( this.moon );
 
-    
-    
     this.light.lookAt(this.earth.position);
     this.scene.add(this.light);
 
-
+    this.overviewCamera.lookAt(this.earth.position);
+ 
   }
 
   public animate(): void {
@@ -128,9 +216,11 @@ export class EngineService implements OnDestroy {
 
     //this.earth.rotation.x += 0.01;
    // this.earth.rotation.y += 0.01;
-    this.renderer.render(this.scene, this.camera);
-    this.renderer.setSize(320, 200);
-  }
+   this.renderer.render(this.scene, this.camera);
+   this.renderer.setSize( this.viewWidth + 4, this.viewWidth + 4);
+   this.overviewRenderer.render(this.scene, this.overviewCamera);
+   this.overviewRenderer.setSize( this.viewWidth + 4, this.viewWidth + 4);
+ }
 
   public resize(): void {
     const width = window.innerWidth;
@@ -140,5 +230,6 @@ export class EngineService implements OnDestroy {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize( width, height );
+    //this.overviewRenderer.setSize( width, height );
   }
 }
