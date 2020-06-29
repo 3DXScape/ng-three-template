@@ -71,42 +71,42 @@ export class EngineService implements OnDestroy {
     //var c = document.getElementById("dCanvas");
    var ctx = aCanvas.nativeElement.getContext("2d");
     ctx.beginPath();
-    ctx.rect(5, 5, this.viewWidth, this.viewHeight);
-    ctx.fillStyle = '#202020';
+    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
+    ctx.fillStyle = '#242424';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = bCanvas.nativeElement.getContext("2d");
     ctx.beginPath();
-    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
     ctx.fillStyle = '#808080';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = cCanvas.nativeElement.getContext("2d");
     ctx.beginPath();
-    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
     ctx.fillStyle = '#303030';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
     ctx.stroke();
 
     ctx = dCanvas.nativeElement.getContext("2d");
     ctx.beginPath();
-    ctx.rect(5, 5, this.viewWidth, this.viewWidth);
+    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
     ctx.fillStyle = '#404040';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewWidth/2, this.viewWidth/10, 0, 2 * Math.PI);
+    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
     ctx.stroke();
 
 
