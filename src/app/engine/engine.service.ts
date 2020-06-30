@@ -52,8 +52,8 @@ export class EngineService implements OnDestroy {
     this.bCanvas = bCanvas.nativeElement;
     this.cCanvas = cCanvas.nativeElement;
     this.dCanvas = dCanvas.nativeElement;
-    this.viewWidth = window.innerWidth/7;
-    this.viewHeight = window.innerHeight/3.5;
+    this.viewWidth = this.aCanvas.clientWidth; //window.innerWidth/7;
+    this.viewHeight = this.aCanvas.clientHeight * 2; //window.innerHeight/3.5;
     this.canvas.height = this.viewHeight + 4;
     this.canvas.width = this.viewWidth + 4;
     this.overviewCanvas.height = this.viewWidth + 4;
