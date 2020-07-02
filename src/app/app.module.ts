@@ -7,6 +7,8 @@ import { UiInfobarTopComponent } from './ui/ui-infobar-top/ui-infobar-top.compon
 import { UiSidebarLeftComponent } from './ui/ui-sidebar-left/ui-sidebar-left.component';
 import { UiSidebarRightComponent } from './ui/ui-sidebar-right/ui-sidebar-right.component';
 import { UiComponent } from './ui/ui.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { UiComponent } from './ui/ui.component';
     UiSidebarRightComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
   ],

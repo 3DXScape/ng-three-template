@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Injectable, ElementRef, OnDestroy, NgZone } from '@angular/core';
 import { Vector3 } from 'three';
+import { Console, debug } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class EngineService implements OnDestroy {
@@ -47,16 +48,18 @@ export class EngineService implements OnDestroy {
     aCanvas: ElementRef<HTMLCanvasElement>, bCanvas: ElementRef<HTMLCanvasElement>,cCanvas: ElementRef<HTMLCanvasElement>, dCanvas: ElementRef<HTMLCanvasElement>   ): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement;
+    //this.canvas.width = this.viewWidth + 4;
+    //this.canvas.height = this.viewHeight + 4;
     this.overviewCanvas = overviewCanvas.nativeElement;
     this.aCanvas = aCanvas.nativeElement;
     this.bCanvas = bCanvas.nativeElement;
     this.cCanvas = cCanvas.nativeElement;
     this.dCanvas = dCanvas.nativeElement;
-    this.viewWidth = this.aCanvas.clientWidth; //window.innerWidth/7;
-    this.viewHeight = this.aCanvas.clientHeight * 2; //window.innerHeight/3.5;
+    this.viewWidth = this.canvas.width; //window.innerWidth/7;
+    this.viewHeight = this.canvas.height; //window.innerHeight/3.5;
     this.canvas.height = this.viewHeight + 4;
     this.canvas.width = this.viewWidth + 4;
-    this.overviewCanvas.height = this.viewWidth + 4;
+    this.overviewCanvas.height = this.viewHeight + 4;
     this.overviewCanvas.width = this.viewWidth + 4;
     this.aCanvas.height = this.viewHeight + 4;
     this.aCanvas.width = this.viewWidth + 4;
@@ -66,7 +69,9 @@ export class EngineService implements OnDestroy {
     this.cCanvas.width = this.viewWidth + 4;
     this.dCanvas.height = this.viewHeight + 4;
     this.dCanvas.width = this.viewWidth + 4;
-    
+ 
+    console.log("height:" + this.viewHeight + "width:" + this.viewWidth);
+   
     //var c = this.dCanvas;
     //var c = document.getElementById("dCanvas");
    var ctx = aCanvas.nativeElement.getContext("2d");
@@ -193,6 +198,9 @@ export class EngineService implements OnDestroy {
     // because it could trigger heavy changeDetection cycles.
     this.ngZone.runOutsideAngular(() => {
       if (document.readyState !== 'loading') {
+ 
+        console.log("animate: height:" + this.canvas.height + " width:" + this.canvas.width);
+ 
         this.render();
       } else {
         window.addEventListener('DOMContentLoaded', () => {
