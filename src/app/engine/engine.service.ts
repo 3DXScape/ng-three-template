@@ -5,6 +5,7 @@ import { Console, debug } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class EngineService implements OnDestroy {
+  private renderPorts: HTMLDivElement;
   private canvas: HTMLCanvasElement;
   private renderer: THREE.WebGLRenderer;
   private overviewCanvas: HTMLCanvasElement;
@@ -20,7 +21,7 @@ export class EngineService implements OnDestroy {
   private camera: THREE.PerspectiveCamera;
   private overviewCamera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
-  private overviewScene;
+  private overviewScene: THREE.Scene;
   private light: THREE.DirectionalLight;
   private alight: THREE.AmbientLight;
 
@@ -29,8 +30,8 @@ export class EngineService implements OnDestroy {
   private clock = new THREE.Clock();
   private rate = 0.25; //relative operating rate for model
 
-  private viewWidth = 280;
-  private viewHeight = 280;
+  private viewWidth: number = 280;
+  private viewHeight: number = 280;
 
 
 
@@ -43,76 +44,47 @@ export class EngineService implements OnDestroy {
       cancelAnimationFrame(this.frameId);
     }
   }
+  public SetSizes(cnvs: HTMLCanvasElement)
+  {
+    cnvs.height = this.viewHeight;
+    cnvs.width = this.viewWidth;
 
-  public createScene(canvas: ElementRef<HTMLCanvasElement>, overviewCanvas: ElementRef<HTMLCanvasElement>,
-    aCanvas: ElementRef<HTMLCanvasElement>, bCanvas: ElementRef<HTMLCanvasElement>,cCanvas: ElementRef<HTMLCanvasElement>, dCanvas: ElementRef<HTMLCanvasElement>   ): void {
-    // The first step is to get the reference of the canvas element from our HTML document
-    this.canvas = canvas.nativeElement;
-    //this.canvas.width = this.viewWidth + 4;
-    //this.canvas.height = this.viewHeight + 4;
-    this.overviewCanvas = overviewCanvas.nativeElement;
-    this.aCanvas = aCanvas.nativeElement;
-    this.bCanvas = bCanvas.nativeElement;
-    this.cCanvas = cCanvas.nativeElement;
-    this.dCanvas = dCanvas.nativeElement;
-    this.viewWidth = this.canvas.width; //window.innerWidth/7;
-    this.viewHeight = this.canvas.height; //window.innerHeight/3.5;
-    this.canvas.height = this.viewHeight + 4;
-    this.canvas.width = this.viewWidth + 4;
-    this.overviewCanvas.height = this.viewHeight + 4;
-    this.overviewCanvas.width = this.viewWidth + 4;
-    this.aCanvas.height = this.viewHeight + 4;
-    this.aCanvas.width = this.viewWidth + 4;
-    this.bCanvas.height = this.viewHeight + 4;
-    this.bCanvas.width = this.viewWidth + 4;
-    this.cCanvas.height = this.viewHeight + 4;
-    this.cCanvas.width = this.viewWidth + 4;
-    this.dCanvas.height = this.viewHeight + 4;
-    this.dCanvas.width = this.viewWidth + 4;
- 
-    console.log("height:" + this.viewHeight + "width:" + this.viewWidth);
-   
-    //var c = this.dCanvas;
-    //var c = document.getElementById("dCanvas");
-   var ctx = aCanvas.nativeElement.getContext("2d");
+  }
+  // put a background fill with a circle in center of cell
+  public DummyContent(cnvs: HTMLCanvasElement)
+  {
+    console.log("animate: height:" + cnvs.height + " width:" + cnvs.width);
+
+    var ctx = cnvs.getContext("2d");
     ctx.beginPath();
-    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
+    ctx.rect(0,0, this.viewWidth - 0, this.viewHeight - 0);
     ctx.fillStyle = '#242424';
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath();
     ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
     ctx.stroke();
+  }
 
-    ctx = bCanvas.nativeElement.getContext("2d");
-    ctx.beginPath();
-    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
-    ctx.fillStyle = '#808080';
-    ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
-    ctx.stroke();
+  public createScene(renderPorts: ElementRef<HTMLDivElement>, canvas: ElementRef<HTMLCanvasElement>, overviewCanvas: ElementRef<HTMLCanvasElement>,
+    aCanvas: ElementRef<HTMLCanvasElement>, bCanvas: ElementRef<HTMLCanvasElement>,cCanvas: ElementRef<HTMLCanvasElement>, dCanvas: ElementRef<HTMLCanvasElement>   ): void {
+    // The first step is to get the reference of the canvas element from our HTML document
+    this.renderPorts = renderPorts.nativeElement;
+    this.canvas = canvas.nativeElement;
+    this.overviewCanvas = overviewCanvas.nativeElement;
+    this.aCanvas = aCanvas.nativeElement;
+    this.bCanvas = bCanvas.nativeElement;
+    this.cCanvas = cCanvas.nativeElement;
+    this.dCanvas = dCanvas.nativeElement;
 
-    ctx = cCanvas.nativeElement.getContext("2d");
-    ctx.beginPath();
-    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
-    ctx.fillStyle = '#303030';
-    ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
-    ctx.stroke();
+    console.log("createScene: height:" + this.renderPorts.clientHeight + " width:" + this.renderPorts.clientWidth);
+    this.viewWidth  = this.renderPorts.clientWidth  / 3;
+    this.viewHeight = this.renderPorts.clientHeight / 2;
 
-    ctx = dCanvas.nativeElement.getContext("2d");
-    ctx.beginPath();
-    ctx.rect(4, 4, this.viewWidth - 4, this.viewHeight - 4);
-    ctx.fillStyle = '#404040';
-    ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.beginPath();
-    ctx.arc(this.viewWidth/2, this.viewHeight/2, this.viewHeight/10, 0, 2 * Math.PI);
-    ctx.stroke();
+    this.SetSizes(this.aCanvas);
+    this.SetSizes(this.bCanvas);
+    this.SetSizes(this.cCanvas);
+    this.SetSizes(this.dCanvas);
 
 
     this.renderer = new THREE.WebGLRenderer({
@@ -120,27 +92,28 @@ export class EngineService implements OnDestroy {
       alpha: true,    // transparent background
       antialias: true // smooth edges
     });
-    this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
+    //this.renderer.setSize(window.innerWidth/2, window.innerHeight/2);
+    this.renderer.setSize(this.viewWidth, this.viewHeight);
 
     this.overviewRenderer = new THREE.WebGLRenderer({
       canvas: this.overviewCanvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
     });
-    this.overviewRenderer.setSize(window.innerWidth/2, window.innerHeight/2);
+    this.overviewRenderer.setSize(this.viewWidth, this.viewHeight);
 
     // create the scene
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(
       //75, window.innerWidth / window.innerHeight, 0.1, 1000
-      75, 1.00, 0.1, 1000
+      75, this.viewWidth / this.viewHeight, 0.1, 1000
       );
     this.camera.position.z = 5.37;
     this.scene.add(this.camera);
 
     this.overviewCamera = new THREE.PerspectiveCamera(
-      75, 1.0, 0.1, 1000
+      75, this.viewWidth / this.viewHeight, 0.1, 1000
     );
     this.overviewCamera.position.y = 8.0;
     this.scene.add(this.overviewCamera);
@@ -199,7 +172,9 @@ export class EngineService implements OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       if (document.readyState !== 'loading') {
  
-        console.log("animate: height:" + this.canvas.height + " width:" + this.canvas.width);
+        console.log("animate: height:" + this.renderPorts.clientHeight + " width:" + this.renderPorts.clientWidth);
+        this.SetSizes(this.canvas);
+        this.DummyContent(this.aCanvas);
  
         this.render();
       } else {
@@ -227,9 +202,10 @@ export class EngineService implements OnDestroy {
     //this.earth.rotation.x += 0.01;
    // this.earth.rotation.y += 0.01;
    this.renderer.render(this.scene, this.camera);
-   this.renderer.setSize( this.viewWidth + 4, this.viewHeight + 4);
+   //this.renderer.setSize( 256, 256);
+   this.renderer.setSize( this.viewWidth, this.viewHeight+1);
    this.overviewRenderer.render(this.scene, this.overviewCamera);
-   this.overviewRenderer.setSize( this.viewWidth + 4, this.viewHeight + 4);
+   this.overviewRenderer.setSize( this.viewWidth, this.viewHeight+1);
  }
 
   public resize(): void {
