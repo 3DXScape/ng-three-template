@@ -1,67 +1,99 @@
-<div class="container"><div class="engine-wrapper">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GeoPose Reconstruction</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Frames <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Frame Graph <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Poses <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Something</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+<div class="container">
+  <div class="engine-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">GeoPose Reconstruction</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Frames <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Frame Graph <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Poses <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Something</a>
+              <a class="dropdown-item" href="#">Something</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    <!--div class="container"><div class = "row"> <div class="col-md-12"> .    </div>   </div></div-->
+    <div #renderPorts class="container" id="renderPorts" style="border:8px solid #000000">
+      <div class="row">
+        <div class="col-sm-4">
+          <canvas #overviewCanvas id="overviewCanvas" class="border border-primary" height=220px width=220px></canvas>
+          <figure class="figure">
+            <figcaption class="figure-caption">Renderport 0.0</figcaption>
+          </figure>
+        </div>
+        <div class="col-sm-4">
+          <canvas #aCanvas id="aCanvas" class="border border-primary" height=220px width=220p></canvas>
+          <figure class="figure">
+            <figcaption class="figure-caption">Renderport 0.1</figcaption>
+          </figure>
+        </div>
+        <div class="col-sm-4">
+          <canvas #bCanvas id="bCanvas" class="border border-primary" height=220px width=220p></canvas>
+          <figure class="figure">
+            <figcaption class="figure-caption text-right">Renderport 0.2</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <canvas #rendererCanvas id="renderCanvas" class="border border-primary" height=220px width=220p></canvas>
+          <figure class="figure">
+            <figcaption #figCaption.1.0 class="figure-caption">Renderport 1.0</figcaption>
+          </figure>
+        </div>
+        <div class="col-sm-4">
+          <canvas #cCanvas id="cCanvas" class="border border-primary" height=220px width=220p></canvas>
+          <figure class="figure">
+            <figcaption class="figure-caption">Renderport 1.1</figcaption>
+          </figure>
+        </div>
+        <div class="col-sm-4">
+          <canvas #dCanvas id="dCanvas" class="border border-primary" height=220px width=220p></canvas>
+          <figure class="figure">
+            <figcaption class="figure-caption">Renderport 1.2</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div><span></span></div>
+    </div>
+    <div class="d-flex justify-content-center my-8">
+      <form class="range-field w-75">
+        <input id="slider11" class="border-0" type="range" min="0" max="200" width="400" />
       </form>
-    </div>
-  </nav>
-  <!--div class="container"><div class = "row"> <div class="col-md-12"> .    </div>   </div></div-->
-  <div #renderPorts class="container" id="renderPorts" style="border:8px solid #000000">
-    <div class="row">
-      <div class="col-sm-4"><canvas #overviewCanvas id="overviewCanvas" class="border border-primary" height=220px width=220px></canvas></div>
-      <div class="col-sm-4"><canvas #aCanvas id="aCanvas" class="border border-primary" height=220px width=220p></canvas></div>
-      <div class="col-sm-4"><canvas #bCanvas id="bCanvas" class="border border-primary" height=220px width=220p></canvas></div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4"><canvas #rendererCanvas id="renderCanvas" class="border border-primary" height=220px width=220p></canvas></div>
-      <div class="col-sm-4"><canvas #cCanvas id="cCanvas" class="border border-primary" height=220px width=220p></canvas></div>
-      <div class="col-sm-4"><canvas #dCanvas id="dCanvas" class="border border-primary" height=220px width=220p></canvas></div>
+      <span class="font-weight-bold text-primary ml-2 mt-1 valueSpan"></span>
     </div>
   </div>
-  <div class="d-flex justify-content-center my-8">
-    <form class="range-field w-75">
-      <input id="slider11" class="border-0" type="range" min="0" max="200" width="400" />
-    </form>
-    <span class="font-weight-bold text-primary ml-2 mt-1 valueSpan"></span>
-  </div>
 </div>
-</div>
-
-

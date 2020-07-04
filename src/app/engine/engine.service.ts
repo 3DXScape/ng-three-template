@@ -78,8 +78,9 @@ export class EngineService implements OnDestroy {
     this.dCanvas = dCanvas.nativeElement;
 
     console.log("createScene: height:" + this.renderPorts.clientHeight + " width:" + this.renderPorts.clientWidth);
-    this.viewWidth  = this.renderPorts.clientWidth  / 3;
-    this.viewHeight = this.renderPorts.clientHeight / 2;
+    var portOffset = 8;
+    this.viewWidth  = (this.renderPorts.clientWidth  / 3) - portOffset;
+    this.viewHeight = (this.renderPorts.clientHeight / 2) - portOffset;
 
     this.SetSizes(this.aCanvas);
     this.SetSizes(this.bCanvas);
@@ -173,7 +174,7 @@ export class EngineService implements OnDestroy {
       if (document.readyState !== 'loading') {
  
         console.log("animate: height:" + this.renderPorts.clientHeight + " width:" + this.renderPorts.clientWidth);
-        this.SetSizes(this.canvas);
+        //this.SetSizes(this.canvas);
         this.DummyContent(this.aCanvas);
  
         this.render();
@@ -209,13 +210,30 @@ export class EngineService implements OnDestroy {
  }
 
   public resize(): void {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    ///const width = window.innerWidth;
+    ///const height = window.innerHeight;
 
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
+    ///this.camera.aspect = width / height;
+    ///this.camera.updateProjectionMatrix();
 
-    this.renderer.setSize( width, height );
+    ///this.renderer.setSize( width, height );
     //this.overviewRenderer.setSize( width, height );
+    var portOffset = 8;
+    this.viewWidth  = (this.renderPorts.clientWidth  / 3) - portOffset;
+    this.viewHeight = (this.renderPorts.clientHeight / 2) - portOffset;
+    var aspectRatio = this.viewWidth / this.viewHeight;
+
+    this.SetSizes(this.aCanvas);
+    this.SetSizes(this.bCanvas);
+    this.SetSizes(this.cCanvas);
+    this.SetSizes(this.dCanvas);
+
+    this .renderer.setSize(this.viewWidth, this.viewHeight)
+    this .overviewRenderer.setSize(this.viewWidth, this.viewHeight)
+    this.camera.aspect = aspectRatio;
+    this.camera.updateProjectionMatrix();
+    this.overviewCamera.aspect = aspectRatio;
+    this.overviewCamera.updateProjectionMatrix();
+
   }
 }
