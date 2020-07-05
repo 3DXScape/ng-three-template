@@ -7,6 +7,8 @@ import { EngineService } from './engine.service';
 })
 export class EngineComponent implements OnInit {
 
+  @ViewChild('timeRateSlider', {static: true})
+  public timeRateSlider: ElementRef<HTMLInputElement>;
   @ViewChild('renderPorts', {static: true})
   public renderPorts: ElementRef<HTMLDivElement>;
   @ViewChild('overviewCanvas', {static: true})
@@ -25,7 +27,7 @@ export class EngineComponent implements OnInit {
   public constructor(private engServ: EngineService) { }
 
   public ngOnInit(): void {
-    this.engServ.createScene(this.renderPorts, this.rendererCanvas, this.overviewCanvas, this.aCanvas, this.bCanvas, this.cCanvas, this.dCanvas);
+    this.engServ.createScene(this.timeRateSlider, this.renderPorts, this.rendererCanvas, this.overviewCanvas, this.aCanvas, this.bCanvas, this.cCanvas, this.dCanvas);
     this.engServ.animate();
   }
 

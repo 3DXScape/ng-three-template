@@ -5,6 +5,7 @@ import { Console, debug } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class EngineService implements OnDestroy {
+  private timeRateSlider: HTMLInputElement;
   private renderPorts: HTMLDivElement;
   private canvas: HTMLCanvasElement;
   private renderer: THREE.WebGLRenderer;
@@ -32,6 +33,8 @@ export class EngineService implements OnDestroy {
 
   private viewWidth: number = 280;
   private viewHeight: number = 280;
+
+  private animateTime = 0;
 
 
 
@@ -66,7 +69,7 @@ export class EngineService implements OnDestroy {
     ctx.stroke();
   }
 
-  public createScene(renderPorts: ElementRef<HTMLDivElement>, canvas: ElementRef<HTMLCanvasElement>, overviewCanvas: ElementRef<HTMLCanvasElement>,
+  public createScene(timeRateSlider: ElementRef<HTMLInputElement>, renderPorts: ElementRef<HTMLDivElement>, canvas: ElementRef<HTMLCanvasElement>, overviewCanvas: ElementRef<HTMLCanvasElement>,
     aCanvas: ElementRef<HTMLCanvasElement>, bCanvas: ElementRef<HTMLCanvasElement>,cCanvas: ElementRef<HTMLCanvasElement>, dCanvas: ElementRef<HTMLCanvasElement>   ): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.renderPorts = renderPorts.nativeElement;
@@ -76,6 +79,8 @@ export class EngineService implements OnDestroy {
     this.bCanvas = bCanvas.nativeElement;
     this.cCanvas = cCanvas.nativeElement;
     this.dCanvas = dCanvas.nativeElement;
+    this.timeRateSlider = timeRateSlider.nativeElement;
+    console.log("Slider: " + timeRateSlider.nativeElement.value);
 
     console.log("createScene: height:" + this.renderPorts.clientHeight + " width:" + this.renderPorts.clientWidth);
     var portOffset = 8;
@@ -108,9 +113,10 @@ export class EngineService implements OnDestroy {
 
     this.camera = new THREE.PerspectiveCamera(
       //75, window.innerWidth / window.innerHeight, 0.1, 1000
-      75, this.viewWidth / this.viewHeight, 0.1, 1000
+      20, this.viewWidth / this.viewHeight, 0.1, 1000
       );
-    this.camera.position.z = 5.37;
+    this.camera.position.z = 2.37;
+    this.camera.position.y = 0.7;
     this.scene.add(this.camera);
 
     this.overviewCamera = new THREE.PerspectiveCamera(
@@ -131,7 +137,7 @@ export class EngineService implements OnDestroy {
     //this.scene.add(this.cube);
     var EARTH_RADIUS = 1;
     var textureLoader = new THREE.TextureLoader();
-    var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 32, 32 );
+    var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 64, 64 );
     var earthMaterial = new THREE.MeshPhongMaterial( {
       specular: 0x333333,
       shininess: 5,
@@ -159,6 +165,37 @@ export class EngineService implements OnDestroy {
     } );
     this.moon = new THREE.Mesh( moonGeometry, moonMaterial );
     this.scene.add( this.moon );
+
+    var latOffset = 0.1;
+    var lonOffset = -2.2;
+    var planeSize = 0.5;
+    var planeOffset = planeSize * 0.5;
+    var planeRadius = 0.9998;
+    var geometry = new THREE.PlaneGeometry( planeSize, planeSize, 2 );
+    //var geometry = new THREE.SphereBufferGeometry( 0.05, 16, 16 );
+    var material = new THREE.MeshPhongMaterial( {color: 0x101010, side: THREE.DoubleSide, opacity: 0.4, transparent: true} );
+    //material. = 0.2;
+    var plane = new THREE.Mesh( geometry, material );
+    console.log("Plane: " + plane.position.x + " " + plane.position.y + " " + plane.position.z);
+    const toRadians: number = 3.14159265 / 180.0;
+    let lat: number = (51.812412 + latOffset) * toRadians;
+    let lon: number = (9.056527 + lonOffset) * toRadians;
+    let x: number = planeRadius * Math.sin(lat) * Math.cos(lon);
+    let y: number = planeRadius * Math.sin(lat) * Math.sin(lon);
+    let z: number = planeRadius * Math.cos(lat);
+    console.log( x + " " + y + " " + z);
+    plane.translateX(z); // xyz  yzx zxy.                  zyx  yxz xzy
+    plane.translateY(x);
+    plane.translateZ(y);
+    //plane.position.x = z;
+    //plane.position.z = y;
+    //plane.position.y = x;
+    console.log("Plane: " + plane.position.x + " " + plane.position.y + " " + plane.position.z);
+    plane.lookAt(this.earth.position);
+    //plane.rotation.z = 1.0;
+    this.earth.add(plane);
+    this.rate *= 0.1;
+
 
     this.light.lookAt(this.earth.position);
     this.scene.add(this.light);
@@ -194,6 +231,12 @@ export class EngineService implements OnDestroy {
     this.frameId = requestAnimationFrame(() => {
       this.render();
     });
+    var now = this.animateTime + 1;
+    if((this.animateTime %100) == 0)
+    {
+      this.rate = parseInt(this.timeRateSlider.value)/1000;
+    }
+//    this.rate = parseInt(this.timeRateSlider.value)/1000;
     this.earth.rotation.y += 0.10*this.rate;
     var elapsed = this.clock.getElapsedTime() * 1.0 * this.rate;
     this.moon.position.set( Math.sin( elapsed*0.2 ) * 5, 0, Math.cos( elapsed*0.2 ) * 5 );
