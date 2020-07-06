@@ -113,9 +113,9 @@ export class EngineService implements OnDestroy {
 
     this.camera = new THREE.PerspectiveCamera(
       //75, window.innerWidth / window.innerHeight, 0.1, 1000
-      20, this.viewWidth / this.viewHeight, 0.1, 1000
+      75, this.viewWidth / this.viewHeight, 0.1, 1000
       );
-    this.camera.position.z = 2.37;
+    this.camera.position.z = 6.20;
     this.camera.position.y = 0.7;
     this.scene.add(this.camera);
 
@@ -166,11 +166,13 @@ export class EngineService implements OnDestroy {
     this.moon = new THREE.Mesh( moonGeometry, moonMaterial );
     this.scene.add( this.moon );
 
-    var latOffset = 0.1;
-    var lonOffset = -2.2;
-    var planeSize = 0.5;
+    var latOffset = 0.5;
+    var lonOffset = -2.8;
+    //var latOffset = 0.1;
+    //var lonOffset = -2.2;
+    var planeSize = 0.1;
     var planeOffset = planeSize * 0.5;
-    var planeRadius = 0.9998;
+    var planeRadius = 0.9994;
     var geometry = new THREE.PlaneGeometry( planeSize, planeSize, 2 );
     //var geometry = new THREE.SphereBufferGeometry( 0.05, 16, 16 );
     var material = new THREE.MeshPhongMaterial( {color: 0x101010, side: THREE.DoubleSide, opacity: 0.4, transparent: true} );
@@ -231,15 +233,16 @@ export class EngineService implements OnDestroy {
     this.frameId = requestAnimationFrame(() => {
       this.render();
     });
-    var now = this.animateTime + 1;
-    if((this.animateTime %100) == 0)
-    {
-      this.rate = parseInt(this.timeRateSlider.value)/1000;
-    }
+    var now = this.clock.getElapsedTime();
+    this.rate = parseInt(this.timeRateSlider.value)/1000;
 //    this.rate = parseInt(this.timeRateSlider.value)/1000;
-    this.earth.rotation.y += 0.10*this.rate;
-    var elapsed = this.clock.getElapsedTime() * 1.0 * this.rate;
-    this.moon.position.set( Math.sin( elapsed*0.2 ) * 5, 0, Math.cos( elapsed*0.2 ) * 5 );
+    var elapsed = now * 1.0 * this.rate;
+    //console.log("now: " + now);
+    var earthDay = elapsed % 86400;
+    var earthFactor = 3.14159265 * 2 / 86400; 
+    var moonFactor = earthFactor / 29;
+    this.earth.rotation.y  = earthDay * earthFactor * 50000;
+    this.moon.position.set( Math.sin( elapsed*0.195 ) * 5, 0, Math.cos( elapsed*0.195 ) * 5 );
     this.moon.lookAt(this.earth.position);
     this.moon.rotateY(-1.5);
 
