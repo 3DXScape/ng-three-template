@@ -241,6 +241,7 @@ export class EngineService implements OnDestroy {
     var earthDay = elapsed % 86400;
     var earthFactor = 3.14159265 * 2 / 86400; 
     var moonFactor = earthFactor / 29;
+  //  var mooonAngle = 
     this.earth.rotation.y  = earthDay * earthFactor * 50000;
     this.moon.position.set( Math.sin( elapsed*0.195 ) * 5, 0, Math.cos( elapsed*0.195 ) * 5 );
     this.moon.lookAt(this.earth.position);
